@@ -1,0 +1,54 @@
+name: Roameow
+
+options:
+  bundleIdPrefix: com.attacktive
+  deploymentTarget:
+    macOS: "12.0"
+  xcodeVersion: "15.0"
+  createIntermediateGroups: false
+
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: 2.0.0
+
+targets:
+  Roameow:
+    type: application
+    platform: macOS
+    deploymentTarget: "12.0"
+    sources:
+      - path: Roameow
+        excludes:
+          - Info.plist
+          - Roameow.entitlements
+    configFiles:
+      Debug: Version.xcconfig
+      Release: Version.xcconfig
+    dependencies:
+      - package: Sparkle
+        product: Sparkle
+    settings:
+      base:
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_ENTITLEMENTS: Roameow/Roameow.entitlements
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_HARDENED_RUNTIME: YES
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Roameow/Info.plist
+        LD_RUNPATH_SEARCH_PATHS: "@executable_path/../Frameworks"
+        PRODUCT_BUNDLE_IDENTIFIER: com.attacktive.Roameow
+        SWIFT_VERSION: "5.0"
+
+  RoameowTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "12.0"
+    sources:
+      - RoameowTests
+    dependencies:
+      - target: Roameow
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.attacktive.RoameowTests
+        SWIFT_VERSION: "5.0"

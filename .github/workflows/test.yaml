@@ -1,0 +1,25 @@
+name: 'Test'
+on:
+  push:
+    branches:
+      - 'main'
+      - 'ci-test'
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  build-and-test:
+    name: 'Test'
+    strategy:
+      matrix:
+        os:
+          - 'macos-14'
+          - 'macos-15'
+          - 'macos-26'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v6'
+      - name: 'Build and Test'
+        run: 'xcodebuild test -project Roameow.xcodeproj -scheme Roameow -destination "platform=macOS"'

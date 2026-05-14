@@ -1,0 +1,19 @@
+.DS_Store
+.idea/
+
+# Xcode user state
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+
+# Build output
+build/
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Sparkle private key (never commit)
+private_key.pem
+sparkle_private_key
