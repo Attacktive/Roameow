@@ -2,6 +2,12 @@
 
 A little cat that roams your desktop.
 
+## Requirements
+
+macOS 12 Monterey or later (untested).
+
+Tested on macOS 14 Sonoma and later.
+
 ## Installation
 
 1. Download `Roameow.dmg` from the [latest release](https://github.com/Attacktive/Roameow/releases/latest).
