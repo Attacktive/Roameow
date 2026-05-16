@@ -177,11 +177,14 @@ class PetView: NSView {
 	// MARK: - Preferences
 
 	@objc private func prefsChanged() {
-		let size = CGFloat(prefs.petSize)
-		imageView.frame.size = CGSize(width: size, height: size)
-		loadPetImage()
-		loadAudio()
-		clampToScreenBounds()
+		DispatchQueue.main.async { [weak self] in
+			guard let self else { return }
+			let size = CGFloat(self.prefs.petSize)
+			self.imageView.frame.size = CGSize(width: size, height: size)
+			self.loadPetImage()
+			self.loadAudio()
+			self.clampToScreenBounds()
+		}
 	}
 
 	deinit {
