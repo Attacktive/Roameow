@@ -13,6 +13,7 @@
 		2CF73A5A33F9E2BA7CC833B1 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2249383435AB3C359F36596C /* SettingsWindowController.swift */; };
 		45FD7D7ABF4F03AA67AE9512 /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522A4A1978C02A70FC240A23 /* PetView.swift */; };
 		4A7903245DCB8FB62506429A /* Happy Cat.gif in Resources */ = {isa = PBXBuildFile; fileRef = 96BE47133528B24537B47739 /* Happy Cat.gif */; };
+		B3C1D2E4F5A6789012345678 /* menubar-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6789012345678 /* menubar-icon.png */; };
 		506F62A3A4B8D3956641B8BC /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 27AFA792F176BDDE59504A01 /* Sparkle */; };
 		6BDEDD7063FF4ECC97D2F685 /* OverlayWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBB38DB523E0AAE3088CEF7 /* OverlayWindowController.swift */; };
 		6FDF4EA43951A00FF2D806FE /* PetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AC343AA55FBBC9A31CADB5 /* PetViewController.swift */; };
@@ -45,6 +46,7 @@
 		5D11B040EA002D4D83F95C6D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5FBB38DB523E0AAE3088CEF7 /* OverlayWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindowController.swift; sourceTree = "<group>"; };
 		96BE47133528B24537B47739 /* Happy Cat.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "Happy Cat.gif"; sourceTree = "<group>"; };
+		A1B2C3D4E5F6789012345678 /* menubar-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menubar-icon.png"; sourceTree = "<group>"; };
 		ABE16B9124845CB3AFB39FBB /* RoameowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoameowApp.swift; sourceTree = "<group>"; };
 		AEA6C389DEA0A0FB85B39C4A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		B65198FF70E4139B3935587F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				522A4A1978C02A70FC240A23 /* PetView.swift */,
 				14AC343AA55FBBC9A31CADB5 /* PetViewController.swift */,
 				96BE47133528B24537B47739 /* Happy Cat.gif */,
+				A1B2C3D4E5F6789012345678 /* menubar-icon.png */,
 				3A2FDD91FA7D82E18C600C8E /* meow.mp3 */,
 				5FBB38DB523E0AAE3088CEF7 /* OverlayWindowController.swift */,
 				AEA6C389DEA0A0FB85B39C4A /* Preferences.swift */,
@@ -206,6 +209,7 @@
 			files = (
 				9054D82CFFE21CD7DC1FDC04 /* Assets.xcassets in Resources */,
 				4A7903245DCB8FB62506429A /* Happy Cat.gif in Resources */,
+				B3C1D2E4F5A6789012345678 /* menubar-icon.png in Resources */,
 				E8A8C8F92C5556DCF99B34C6 /* meow.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
