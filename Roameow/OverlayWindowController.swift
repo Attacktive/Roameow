@@ -3,8 +3,7 @@ import AppKit
 class OverlayWindowController: NSWindowController {
 	private var petViewController: PetViewController?
 
-	convenience init() {
-		let screen = NSScreen.main ?? NSScreen.screens[0]
+	convenience init(screen: NSScreen) {
 		let window = NSWindow(
 			contentRect: screen.frame,
 			styleMask: .borderless,
@@ -27,7 +26,7 @@ class OverlayWindowController: NSWindowController {
 	}
 
 	func handleScreenChange() {
-		guard let screen = NSScreen.main else { return }
+		guard let screen = window?.screen else { return }
 		window?.setFrame(screen.frame, display: true)
 		petViewController?.clampToScreenBounds()
 	}
