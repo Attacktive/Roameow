@@ -26,8 +26,8 @@ class OverlayWindowController: NSWindowController {
 	}
 
 	func handleScreenChange() {
-		guard let screen = window?.screen else { return }
-		window?.setFrame(screen.frame, display: true)
+		guard let window, let screen = window.screen else { return }
+		window.setFrame(screen.frame, display: true)
 		petViewController?.clampToScreenBounds()
 	}
 }
