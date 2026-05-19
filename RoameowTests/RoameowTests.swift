@@ -54,4 +54,59 @@ final class RoameowTests: XCTestCase {
 
 		XCTAssertEqual(normalized, 1.0, accuracy: 0.001)
 	}
+
+	// MARK: - FullscreenDetector.coveredDisplays
+
+	private let displayA = DisplayBounds(id: 1, bounds: CGRect(x: 0, y: 0, width: 1920, height: 1080))
+	private let displayB = DisplayBounds(id: 2, bounds: CGRect(x: 1920, y: 0, width: 1920, height: 1080))
+
+	func testFullscreenWindowFlagsDisplay() {
+		let window = WindowInfo(bounds: displayA.bounds, pid: 99, layer: 0)
+		let covered = FullscreenDetector.coveredDisplays(windows: [window], displays: [displayA], ownPID: 42)
+
+		XCTAssertEqual(covered, [1])
+	}
+
+	func testOwnOverlayDoesNotFlagDisplay() {
+		let window = WindowInfo(bounds: displayA.bounds, pid: 42, layer: 0)
+		let covered = FullscreenDetector.coveredDisplays(windows: [window], displays: [displayA], ownPID: 42)
+
+		XCTAssertTrue(covered.isEmpty)
+	}
+
+	func testMaximizedButSmallerWindowDoesNotFlagDisplay() {
+		let smaller = CGRect(x: 0, y: 0, width: 1920, height: 1040)
+		let window = WindowInfo(bounds: smaller, pid: 99, layer: 0)
+		let covered = FullscreenDetector.coveredDisplays(windows: [window], displays: [displayA], ownPID: 42)
+
+		XCTAssertTrue(covered.isEmpty)
+	}
+
+	func testNonZeroLayerWindowDoesNotFlagDisplay() {
+		let window = WindowInfo(bounds: displayA.bounds, pid: 99, layer: 25)
+		let covered = FullscreenDetector.coveredDisplays(windows: [window], displays: [displayA], ownPID: 42)
+
+		XCTAssertTrue(covered.isEmpty)
+	}
+
+	func testFullscreenOnOneDisplayOnlyFlagsThatDisplay() {
+		let window = WindowInfo(bounds: displayA.bounds, pid: 99, layer: 0)
+		let covered = FullscreenDetector.coveredDisplays(
+			windows: [window],
+			displays: [displayA, displayB],
+			ownPID: 42
+		)
+
+		XCTAssertEqual(covered, [1])
+	}
+
+	func testNoWindowsYieldsEmptySet() {
+		let covered = FullscreenDetector.coveredDisplays(
+			windows: [],
+			displays: [displayA, displayB],
+			ownPID: 42
+		)
+
+		XCTAssertTrue(covered.isEmpty)
+	}
 }
