@@ -30,4 +30,15 @@ class OverlayWindowController: NSWindowController {
 		window.setFrame(screen.frame, display: true)
 		petViewController?.clampToScreenBounds()
 	}
+
+	func setActive(_ active: Bool) {
+		if active {
+			showWindow(nil)
+			petViewController?.resume()
+			petViewController?.clampToScreenBounds()
+		} else {
+			window?.orderOut(nil)
+			petViewController?.pause()
+		}
+	}
 }
