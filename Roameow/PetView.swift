@@ -97,6 +97,18 @@ class PetView: NSView {
 		RunLoop.main.add(movementTimer!, forMode: .common)
 	}
 
+	func pause() {
+		movementTimer?.invalidate()
+		movementTimer = nil
+	}
+
+	func resume() {
+		guard isSetUp, movementTimer == nil else { return }
+
+		pickNewTarget()
+		startTimer()
+	}
+
 	private func updateMousePassthrough() {
 		guard let window else { return }
 
