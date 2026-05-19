@@ -1,4 +1,4 @@
-import CoreGraphics
+import AppKit
 
 struct WindowInfo {
 	let bounds: CGRect
@@ -32,5 +32,79 @@ final class FullscreenDetector {
 		}
 
 		return covered
+	}
+
+	private let onChange: (Set<CGDirectDisplayID>) -> Void
+	private var lastCovered: Set<CGDirectDisplayID>?
+
+	init(onChange: @escaping (Set<CGDirectDisplayID>) -> Void) {
+		self.onChange = onChange
+	}
+
+	func start() {
+		let center = NSWorkspace.shared.notificationCenter
+
+		center.addObserver(
+			self,
+			selector: #selector(evaluate),
+			name: NSWorkspace.activeSpaceDidChangeNotification,
+			object: nil
+		)
+
+		center.addObserver(
+			self,
+			selector: #selector(evaluate),
+			name: NSWorkspace.didActivateApplicationNotification,
+			object: nil
+		)
+
+		evaluate()
+	}
+
+	@objc func evaluate() {
+		let ownPID = ProcessInfo.processInfo.processIdentifier
+		let covered = Self.coveredDisplays(
+			windows: Self.currentWindows(),
+			displays: Self.currentDisplays(),
+			ownPID: ownPID
+		)
+
+		guard covered != lastCovered else { return }
+		lastCovered = covered
+		onChange(covered)
+	}
+
+	private static func currentWindows() -> [WindowInfo] {
+		let options: CGWindowListOption = [.optionOnScreenOnly, .excludeDesktopElements]
+		guard let infoList = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]] else {
+			return []
+		}
+
+		return infoList.compactMap { entry in
+			guard
+				let boundsDict = entry[kCGWindowBounds as String] as? NSDictionary,
+				let bounds = CGRect(dictionaryRepresentation: boundsDict as CFDictionary),
+				let pid = (entry[kCGWindowOwnerPID as String] as? NSNumber)?.int32Value,
+				let layer = (entry[kCGWindowLayer as String] as? NSNumber)?.intValue
+			else {
+				return nil
+			}
+
+			return WindowInfo(bounds: bounds, pid: pid, layer: layer)
+		}
+	}
+
+	private static func currentDisplays() -> [DisplayBounds] {
+		NSScreen.screens.compactMap { screen in
+			guard let id = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID else {
+				return nil
+			}
+
+			return DisplayBounds(id: id, bounds: CGDisplayBounds(id))
+		}
+	}
+
+	deinit {
+		NSWorkspace.shared.notificationCenter.removeObserver(self)
 	}
 }
