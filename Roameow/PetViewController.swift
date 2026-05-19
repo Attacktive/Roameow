@@ -9,4 +9,12 @@ class PetViewController: NSViewController {
 	func clampToScreenBounds() {
 		(view as? PetView)?.clampToScreenBounds()
 	}
+
+	func pause() {
+		(view as? PetView)?.pause()
+	}
+
+	func resume() {
+		(view as? PetView)?.resume()
+	}
 }
