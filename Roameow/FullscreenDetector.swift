@@ -18,18 +18,12 @@ struct DisplayBounds {
 }
 
 final class FullscreenDetector {
-	static func coveredDisplays(
-		windows: [WindowInfo],
-		displays: [DisplayBounds],
-		ownPID: pid_t
-	) -> Set<CGDirectDisplayID> {
+	static func coveredDisplays(windows: [WindowInfo],displays: [DisplayBounds],ownPID: pid_t) -> Set<CGDirectDisplayID> {
 		var covered: Set<CGDirectDisplayID> = []
 
 		for display in displays {
 			let isCovered = windows.contains { window in
-				window.pid != ownPID
-					&& window.layer == 0
-					&& window.bounds == display.bounds
+				window.pid != ownPID && window.layer == 0 && window.bounds == display.bounds
 			}
 
 			if isCovered {
@@ -76,6 +70,7 @@ final class FullscreenDetector {
 		)
 
 		guard covered != lastCovered else { return }
+
 		lastCovered = covered
 		onChange(covered)
 	}

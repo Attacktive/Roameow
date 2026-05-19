@@ -2,11 +2,12 @@ import AppKit
 import Sparkle
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+	var updaterController: SPUStandardUpdaterController?
+
 	private var overlayWindowControllers: [CGDirectDisplayID: OverlayWindowController] = [:]
 	private var statusBarController: StatusBarController?
 	private var settingsWindowController: SettingsWindowController?
 	private var fullscreenDetector: FullscreenDetector?
-	var updaterController: SPUStandardUpdaterController?
 
 	func applicationDidFinishLaunching(_ notification: Notification) {
 		updaterController = SPUStandardUpdaterController(
