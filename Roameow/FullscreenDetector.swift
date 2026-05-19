@@ -1,4 +1,4 @@
-import AppKit
+import CoreGraphics
 
 struct WindowInfo {
 	let bounds: CGRect
