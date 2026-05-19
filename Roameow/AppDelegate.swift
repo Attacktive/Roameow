@@ -5,6 +5,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	private var overlayWindowControllers: [CGDirectDisplayID: OverlayWindowController] = [:]
 	private var statusBarController: StatusBarController?
 	private var settingsWindowController: SettingsWindowController?
+	private var fullscreenDetector: FullscreenDetector?
 	var updaterController: SPUStandardUpdaterController?
 
 	func applicationDidFinishLaunching(_ notification: Notification) {
@@ -29,6 +30,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			name: NSApplication.didChangeScreenParametersNotification,
 			object: nil
 		)
+
+		let detector = FullscreenDetector { [weak self] covered in
+			guard let self else { return }
+
+			for (id, controller) in self.overlayWindowControllers {
+				controller.setActive(!covered.contains(id))
+			}
+		}
+
+		fullscreenDetector = detector
+		detector.start()
 	}
 
 	@objc private func screenParametersDidChange() {
@@ -51,6 +63,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				overlayWindowControllers[id]?.handleScreenChange()
 			}
 		}
+
+		fullscreenDetector?.evaluate()
 	}
 
 	private func displayID(for screen: NSScreen) -> CGDirectDisplayID? {
