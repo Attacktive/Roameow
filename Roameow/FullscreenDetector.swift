@@ -1,5 +1,11 @@
 import AppKit
 
+extension NSScreen {
+	var displayID: CGDirectDisplayID? {
+		deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID
+	}
+}
+
 struct WindowInfo {
 	let bounds: CGRect
 	let pid: pid_t
@@ -34,6 +40,7 @@ final class FullscreenDetector {
 		return covered
 	}
 
+	private let ownPID: pid_t = ProcessInfo.processInfo.processIdentifier
 	private let onChange: (Set<CGDirectDisplayID>) -> Void
 	private var lastCovered: Set<CGDirectDisplayID>?
 
@@ -62,7 +69,6 @@ final class FullscreenDetector {
 	}
 
 	@objc func evaluate() {
-		let ownPID = ProcessInfo.processInfo.processIdentifier
 		let covered = Self.coveredDisplays(
 			windows: Self.currentWindows(),
 			displays: Self.currentDisplays(),
@@ -85,7 +91,8 @@ final class FullscreenDetector {
 				let boundsDict = entry[kCGWindowBounds as String] as? NSDictionary,
 				let bounds = CGRect(dictionaryRepresentation: boundsDict as CFDictionary),
 				let pid = (entry[kCGWindowOwnerPID as String] as? NSNumber)?.int32Value,
-				let layer = (entry[kCGWindowLayer as String] as? NSNumber)?.intValue
+				let layer = (entry[kCGWindowLayer as String] as? NSNumber)?.intValue,
+				layer == 0
 			else {
 				return nil
 			}
@@ -96,10 +103,7 @@ final class FullscreenDetector {
 
 	private static func currentDisplays() -> [DisplayBounds] {
 		NSScreen.screens.compactMap { screen in
-			guard let id = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID else {
-				return nil
-			}
-
+			guard let id = screen.displayID else { return nil }
 			return DisplayBounds(id: id, bounds: CGDisplayBounds(id))
 		}
 	}

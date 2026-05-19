@@ -16,7 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		)
 
 		for screen in NSScreen.screens {
-			guard let id = displayID(for: screen) else { continue }
+			guard let id = screen.displayID else { continue }
 			let controller = OverlayWindowController(screen: screen)
 			controller.showWindow(nil)
 			overlayWindowControllers[id] = controller
@@ -45,7 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@objc private func screenParametersDidChange() {
 		let currentScreens = NSScreen.screens
-		let currentIDs = Set(currentScreens.compactMap { displayID(for: $0) })
+		let currentIDs = Set(currentScreens.compactMap { $0.displayID })
 		let existingIDs = Set(overlayWindowControllers.keys)
 
 		for id in existingIDs.subtracting(currentIDs) {
@@ -54,7 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 
 		for screen in currentScreens {
-			guard let id = displayID(for: screen) else { continue }
+			guard let id = screen.displayID else { continue }
 			if overlayWindowControllers[id] == nil {
 				let controller = OverlayWindowController(screen: screen)
 				controller.showWindow(nil)
@@ -65,10 +65,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 
 		fullscreenDetector?.evaluate()
-	}
-
-	private func displayID(for screen: NSScreen) -> CGDirectDisplayID? {
-		screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID
 	}
 
 	func showSettings() {

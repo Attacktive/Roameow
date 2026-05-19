@@ -104,8 +104,6 @@ class PetView: NSView {
 
 	func resume() {
 		guard isSetUp, movementTimer == nil else { return }
-
-		pickNewTarget()
 		startTimer()
 	}
 
