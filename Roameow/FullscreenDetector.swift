@@ -63,11 +63,16 @@ final class FullscreenDetector {
 	}
 
 	@objc func evaluate() {
-		let covered = Self.coveredDisplays(
-			windows: Self.currentWindows(),
-			displays: Self.currentDisplays(),
-			ownPID: ownPID
-		)
+		let displays = Self.currentDisplays()
+		let covered: Set<CGDirectDisplayID>
+
+		if displays.count == 1 {
+			let isFullscreen = NSApplication.shared.currentSystemPresentationOptions.contains(.fullScreen)
+			covered = isFullscreen ? [displays[0].id] : []
+		} else {
+			let windows = Self.currentWindows()
+			covered = Self.coveredDisplays(windows: windows, displays: displays, ownPID: ownPID)
+		}
 
 		guard covered != lastCovered else { return }
 
