@@ -18,7 +18,7 @@ struct DisplayBounds {
 }
 
 final class FullscreenDetector {
-	static func coveredDisplays(windows: [WindowInfo],displays: [DisplayBounds],ownPID: pid_t) -> Set<CGDirectDisplayID> {
+	static func coveredDisplays(windows: [WindowInfo], displays: [DisplayBounds], ownPID: pid_t) -> Set<CGDirectDisplayID> {
 		var covered: Set<CGDirectDisplayID> = []
 
 		for display in displays {
