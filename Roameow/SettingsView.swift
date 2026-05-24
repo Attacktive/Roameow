@@ -93,14 +93,7 @@ private struct ImageTab: View {
 	}
 
 	private var previewImage: NSImage? {
-		let customPath = prefs.customImagePath
-		if !customPath.isEmpty, let img = NSImage(contentsOf: URL(fileURLWithPath: customPath)) {
-			return img
-		}
-		if let url = Bundle.main.url(forResource: "Happy Cat", withExtension: "gif") {
-			return NSImage(contentsOf: url)
-		}
-		return nil
+		prefs.resolvedImageURL.flatMap { NSImage(contentsOf: $0) }
 	}
 
 	private var imageLabel: String {
@@ -195,20 +188,14 @@ private struct SoundTab: View {
 
 	private func pickSound() {
 		let panel = NSOpenPanel()
-		panel.allowedContentTypes = [.mp3, .wav]
+		panel.allowedContentTypes = [.audio]
 		panel.allowsMultipleSelection = false
 		guard panel.runModal() == .OK, let url = panel.url else { return }
 		prefs.customSoundPath = url.path
 	}
 
 	private func playTest() {
-		let url: URL?
-		if !prefs.customSoundPath.isEmpty {
-			url = URL(fileURLWithPath: prefs.customSoundPath)
-		} else {
-			url = Bundle.main.url(forResource: "meow", withExtension: "mp3")
-		}
-		guard let url else { return }
+		guard let url = prefs.resolvedSoundURL else { return }
 		testPlayer = try? AVAudioPlayer(contentsOf: url)
 		testPlayer?.volume = Float(prefs.volume)
 		testPlayer?.play()

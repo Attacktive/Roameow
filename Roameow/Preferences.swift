@@ -12,4 +12,20 @@ class Preferences: ObservableObject {
 	@AppStorage("volume") var volume: Double = 0.13
 	@AppStorage("customImagePath") var customImagePath: String = ""
 	@AppStorage("customSoundPath") var customSoundPath: String = ""
+
+	var resolvedImageURL: URL? {
+		if !customImagePath.isEmpty {
+			return URL(fileURLWithPath: customImagePath)
+		}
+
+		return Bundle.main.url(forResource: "Happy Cat", withExtension: "gif")
+	}
+
+	var resolvedSoundURL: URL? {
+		if !customSoundPath.isEmpty {
+			return URL(fileURLWithPath: customSoundPath)
+		}
+
+		return Bundle.main.url(forResource: "meow", withExtension: "mp3")
+	}
 }

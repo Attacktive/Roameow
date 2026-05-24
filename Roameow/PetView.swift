@@ -60,28 +60,13 @@ class PetView: NSView {
 	// MARK: - Image & Audio
 
 	private func loadPetImage() {
-		let customPath = prefs.customImagePath
-		if !customPath.isEmpty, let image = NSImage(contentsOf: URL(fileURLWithPath: customPath)) {
-			imageView.image = image
-		} else if let url = Bundle.main.url(forResource: "Happy Cat", withExtension: "gif") {
-			imageView.image = NSImage(contentsOf: url)
-		}
-
+		imageView.image = prefs.resolvedImageURL.flatMap { NSImage(contentsOf: $0) }
 		let size = CGFloat(prefs.petSize)
 		imageView.frame.size = CGSize(width: size, height: size)
 	}
 
 	private func loadAudio() {
-		let url: URL?
-		let customPath = prefs.customSoundPath
-		if !customPath.isEmpty {
-			url = URL(fileURLWithPath: customPath)
-		} else {
-			url = Bundle.main.url(forResource: "meow", withExtension: "mp3")
-		}
-
-		guard let url else { return }
-
+		guard let url = prefs.resolvedSoundURL else { return }
 		audioPlayer = try? AVAudioPlayer(contentsOf: url)
 		audioPlayer?.volume = Float(prefs.volume)
 		audioPlayer?.prepareToPlay()
@@ -189,8 +174,6 @@ class PetView: NSView {
 	@objc private func prefsChanged() {
 		DispatchQueue.main.async { [weak self] in
 			guard let self else { return }
-			let size = CGFloat(self.prefs.petSize)
-			self.imageView.frame.size = CGSize(width: size, height: size)
 			self.loadPetImage()
 			self.loadAudio()
 			self.clampToScreenBounds()
