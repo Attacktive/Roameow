@@ -20,13 +20,14 @@ class OverlayWindowController: NSWindowController {
 
 		self.init(window: window)
 
-		let petVC = PetViewController()
+		let petVC = PetViewController(screen: screen)
 		petViewController = petVC
 		window.contentViewController = petVC
 	}
 
-	func handleScreenChange() {
-		guard let window, let screen = window.screen else { return }
+	func handleScreenChange(screen: NSScreen) {
+		guard let window else { return }
+
 		window.setFrame(screen.frame, display: true)
 		petViewController?.clampToScreenBounds()
 	}

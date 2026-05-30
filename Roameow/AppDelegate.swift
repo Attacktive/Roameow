@@ -61,7 +61,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				controller.showWindow(nil)
 				overlayWindowControllers[id] = controller
 			} else {
-				overlayWindowControllers[id]?.handleScreenChange()
+				overlayWindowControllers[id]?.handleScreenChange(screen: screen)
 			}
 		}
 
