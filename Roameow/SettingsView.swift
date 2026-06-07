@@ -106,7 +106,13 @@ private struct ImageTab: View {
 		let panel = NSOpenPanel()
 		panel.allowedContentTypes = [.image]
 		panel.allowsMultipleSelection = false
-		guard panel.runModal() == .OK, let url = panel.url else { return }
+		guard
+			panel.runModal() == .OK,
+			let url = panel.url
+		else {
+			return
+		}
+
 		prefs.customImagePath = url.path
 	}
 }
@@ -190,12 +196,19 @@ private struct SoundTab: View {
 		let panel = NSOpenPanel()
 		panel.allowedContentTypes = [.audio]
 		panel.allowsMultipleSelection = false
-		guard panel.runModal() == .OK, let url = panel.url else { return }
+		guard
+			panel.runModal() == .OK,
+			let url = panel.url
+		else {
+			return
+		}
+
 		prefs.customSoundPath = url.path
 	}
 
 	private func playTest() {
 		guard let url = prefs.resolvedSoundURL else { return }
+
 		testPlayer = try? AVAudioPlayer(contentsOf: url)
 		testPlayer?.volume = Float(prefs.volume)
 		testPlayer?.play()

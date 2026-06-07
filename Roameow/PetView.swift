@@ -41,7 +41,13 @@ class PetView: NSView {
 
 	override func viewDidMoveToWindow() {
 		super.viewDidMoveToWindow()
-		guard window != nil, !isSetUp else { return }
+		guard
+			window != nil,
+			!isSetUp
+		else {
+			return
+		}
+
 		isSetUp = true
 
 		let size = CGFloat(prefs.petSize)
@@ -67,6 +73,7 @@ class PetView: NSView {
 
 	private func loadAudio() {
 		guard let url = prefs.resolvedSoundURL else { return }
+
 		audioPlayer = try? AVAudioPlayer(contentsOf: url)
 		audioPlayer?.volume = Float(prefs.volume)
 		audioPlayer?.prepareToPlay()
@@ -88,7 +95,13 @@ class PetView: NSView {
 	}
 
 	func resume() {
-		guard isSetUp, movementTimer == nil else { return }
+		guard
+			isSetUp,
+			movementTimer == nil
+		else {
+			return
+		}
+
 		startTimer()
 	}
 
@@ -103,7 +116,12 @@ class PetView: NSView {
 
 	private func tick() {
 		updateMousePassthrough()
-		guard prefs.movementEnabled, !isIdle else { return }
+		guard
+			prefs.movementEnabled,
+			!isIdle
+		else {
+			return
+		}
 
 		let now = ProcessInfo.processInfo.systemUptime
 		let speed = prefs.speed
@@ -143,7 +161,12 @@ class PetView: NSView {
 		let size = imageView.frame.size
 		let maxX = bounds.width - size.width
 		let maxY = bounds.height - size.height
-		guard maxX > 0, maxY > 0 else { return }
+		guard
+			maxX > 0,
+			maxY > 0
+		else {
+			return
+		}
 
 		targetPosition = CGPoint(
 			x: CGFloat.random(in: 0...maxX),
@@ -174,6 +197,7 @@ class PetView: NSView {
 	@objc private func prefsChanged() {
 		DispatchQueue.main.async { [weak self] in
 			guard let self else { return }
+
 			self.loadPetImage()
 			self.loadAudio()
 			self.clampToScreenBounds()

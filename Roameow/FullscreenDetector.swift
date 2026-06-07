@@ -82,7 +82,9 @@ final class FullscreenDetector {
 
 	private static func currentWindows() -> [WindowInfo] {
 		let options: CGWindowListOption = [.optionOnScreenOnly, .excludeDesktopElements]
-		guard let infoList = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]] else {
+		guard
+			let infoList = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [[String: Any]]
+		else {
 			return []
 		}
 
@@ -104,6 +106,7 @@ final class FullscreenDetector {
 	private static func currentDisplays() -> [DisplayBounds] {
 		NSScreen.screens.compactMap { screen in
 			guard let id = screen.displayID else { return nil }
+
 			return DisplayBounds(id: id, bounds: CGDisplayBounds(id))
 		}
 	}

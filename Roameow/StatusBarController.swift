@@ -14,6 +14,7 @@ class StatusBarController: NSObject {
 
 	private func setupButton() {
 		guard let button = statusItem.button else { return }
+
 		if let url = Bundle.main.url(forResource: "menubar-icon", withExtension: "png"), let image = NSImage(contentsOf: url) {
 			image.size = NSSize(width: 18, height: 18)
 			button.image = image
