@@ -13,16 +13,16 @@
 		2CF73A5A33F9E2BA7CC833B1 /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2249383435AB3C359F36596C /* SettingsWindowController.swift */; };
 		45FD7D7ABF4F03AA67AE9512 /* PetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522A4A1978C02A70FC240A23 /* PetView.swift */; };
 		4A7903245DCB8FB62506429A /* Happy Cat.gif in Resources */ = {isa = PBXBuildFile; fileRef = 96BE47133528B24537B47739 /* Happy Cat.gif */; };
-		B3C1D2E4F5A6789012345678 /* menubar-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6789012345678 /* menubar-icon.png */; };
 		506F62A3A4B8D3956641B8BC /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 27AFA792F176BDDE59504A01 /* Sparkle */; };
 		6BDEDD7063FF4ECC97D2F685 /* OverlayWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBB38DB523E0AAE3088CEF7 /* OverlayWindowController.swift */; };
-		FD11AA0100000000000000B1 /* FullscreenDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD11AA0100000000000000F1 /* FullscreenDetector.swift */; };
 		6FDF4EA43951A00FF2D806FE /* PetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AC343AA55FBBC9A31CADB5 /* PetViewController.swift */; };
 		725234352FD6832FC848E907 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D11B040EA002D4D83F95C6D /* AppDelegate.swift */; };
 		9054D82CFFE21CD7DC1FDC04 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B65198FF70E4139B3935587F /* Assets.xcassets */; };
 		93FAC2FD51773B56C1AA033C /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA6C389DEA0A0FB85B39C4A /* Preferences.swift */; };
+		B3C1D2E4F5A6789012345678 /* menubar-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6789012345678 /* menubar-icon.png */; };
 		E0E9D0D6DB1A735036F20531 /* RoameowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE16B9124845CB3AFB39FBB /* RoameowApp.swift */; };
 		E8A8C8F92C5556DCF99B34C6 /* meow.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3A2FDD91FA7D82E18C600C8E /* meow.mp3 */; };
+		FD11AA0100000000000000B1 /* FullscreenDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD11AA0100000000000000F1 /* FullscreenDetector.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,7 +46,6 @@
 		522A4A1978C02A70FC240A23 /* PetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PetView.swift; sourceTree = "<group>"; };
 		5D11B040EA002D4D83F95C6D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5FBB38DB523E0AAE3088CEF7 /* OverlayWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindowController.swift; sourceTree = "<group>"; };
-		FD11AA0100000000000000F1 /* FullscreenDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenDetector.swift; sourceTree = "<group>"; };
 		96BE47133528B24537B47739 /* Happy Cat.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "Happy Cat.gif"; sourceTree = "<group>"; };
 		A1B2C3D4E5F6789012345678 /* menubar-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menubar-icon.png"; sourceTree = "<group>"; };
 		ABE16B9124845CB3AFB39FBB /* RoameowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoameowApp.swift; sourceTree = "<group>"; };
@@ -55,6 +54,7 @@
 		C696275FC707AB76A676B24B /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
 		D46230D4CDD0E581AAEBFDE8 /* RoameowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoameowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2080E911A5EB6729F6C554 /* RoameowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoameowTests.swift; sourceTree = "<group>"; };
+		FD11AA0100000000000000F1 /* FullscreenDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenDetector.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,7 +268,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.attacktive.RoameowTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.attacktive.roameowtests;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Roameow.app/Contents/MacOS/Roameow";
@@ -288,7 +288,7 @@
 				INFOPLIST_FILE = Roameow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.attacktive.Roameow;
+				PRODUCT_BUNDLE_IDENTIFIER = com.attacktive.roameow;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
@@ -307,7 +307,7 @@
 				INFOPLIST_FILE = Roameow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.attacktive.Roameow;
+				PRODUCT_BUNDLE_IDENTIFIER = com.attacktive.roameow;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
@@ -348,6 +348,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = PB486BSHSH;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -411,6 +412,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = PB486BSHSH;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -444,7 +446,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.attacktive.RoameowTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.attacktive.roameowtests;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Roameow.app/Contents/MacOS/Roameow";
