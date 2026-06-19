@@ -15,19 +15,23 @@ Tested on macOS 14 Sonoma and later.
 
 ## First launch (unsigned app)
 
-macOS will block the app on first open because it isn't notarized. To get past it:
+Roameow isn't notarized (no paid Apple Developer account), so macOS Gatekeeper blocks it the first time you open it. You only need to clear it once.
 
-**Option A — right-click method**
+**Option A — System Settings (macOS 15 Sequoia and later)**
 
-Right-click `Roameow.app` in Finder and choose **Open**, then click **Open** in the dialog. You only need to do this once.
+1. Double-click **Roameow.app**. macOS refuses to open it — click **Done**.
+2. Open **System Settings → Privacy & Security**, scroll down to the **Security** section, and click **Open Anyway** next to the message about Roameow.
+3. Authenticate with Touch ID or your password, then click **Open Anyway** once more to confirm.
 
-**Option B — terminal**
+> On macOS 14 Sonoma and earlier you could instead right-click **Roameow.app** in Finder and choose **Open**. Apple removed that Control-click shortcut for unsigned apps in macOS 15, so it no longer works on current macOS.
+
+**Option B — Terminal (works on every version)**
 
 ```bash
-xattr -d com.apple.quarantine /Applications/Roameow.app
+xattr -dr com.apple.quarantine /Applications/Roameow.app
 ```
 
-Then open it normally.
+Then open Roameow normally.
 
 ## Usage
 
