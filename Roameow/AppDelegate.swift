@@ -20,7 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			guard let id = screen.displayID else { continue }
 
 			let controller = OverlayWindowController(screen: screen)
-			controller.showWindow(nil)
+			controller.show()
 			overlayWindowControllers[id] = controller
 		}
 
@@ -60,7 +60,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 			if overlayWindowControllers[id] == nil {
 				let controller = OverlayWindowController(screen: screen)
-				controller.showWindow(nil)
+				controller.show()
 				overlayWindowControllers[id] = controller
 			} else {
 				overlayWindowControllers[id]?.handleScreenChange(screen: screen)

@@ -32,9 +32,13 @@ class OverlayWindowController: NSWindowController {
 		petViewController?.clampToScreenBounds()
 	}
 
+	func show() {
+		window?.orderFrontRegardless()
+	}
+
 	func setActive(_ active: Bool) {
 		if active {
-			showWindow(nil)
+			show()
 			petViewController?.resume()
 			petViewController?.clampToScreenBounds()
 		} else {
