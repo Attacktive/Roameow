@@ -14,7 +14,26 @@ private struct AnimatedImageView: NSViewRepresentable {
 	}
 
 	func updateNSView(_ view: NSImageView, context: Context) {
-		view.image = image
+		if view.image !== image {
+			view.image = image
+		}
+	}
+}
+
+// MARK: - Preview Image Cache
+
+enum PreviewImageCache {
+	private static var images: [URL: NSImage] = [:]
+
+	static func image(for url: URL?) -> NSImage? {
+		guard let url else { return nil }
+		if let cached = images[url] {
+			return cached
+		}
+
+		let image = NSImage(contentsOf: url)
+		images[url] = image
+		return image
 	}
 }
 
@@ -70,7 +89,7 @@ private struct ImageTab: View {
 							.foregroundColor(.accentColor)
 							.font(.caption)
 					}
-					Slider(value: $prefs.petSize, in: 32...512)
+					Slider(value: $prefs.petSize, in: 32...512, step: 32)
 				}
 
 				VStack(alignment: .leading, spacing: 6) {
@@ -96,7 +115,7 @@ private struct ImageTab: View {
 	}
 
 	private var previewImage: NSImage? {
-		prefs.resolvedImageURL.flatMap { NSImage(contentsOf: $0) }
+		PreviewImageCache.image(for: prefs.resolvedImageURL)
 	}
 
 	private var imageLabel: String {
