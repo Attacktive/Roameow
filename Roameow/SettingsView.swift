@@ -1,6 +1,7 @@
 import SwiftUI
 import AppKit
 import AVFoundation
+import ServiceManagement
 
 private struct AnimatedImageView: NSViewRepresentable {
 	let image: NSImage?
@@ -26,6 +27,7 @@ struct SettingsView: View {
 				Label("Image", systemImage: "photo").tag(0)
 				Label("Movement", systemImage: "figure.walk").tag(1)
 				Label("Sound", systemImage: "speaker.wave.2").tag(2)
+				Label("General", systemImage: "gearshape").tag(3)
 			}
 			.pickerStyle(.segmented)
 			.padding()
@@ -37,12 +39,13 @@ struct SettingsView: View {
 				case 0: ImageTab()
 				case 1: MovementTab()
 				case 2: SoundTab()
+				case 3: GeneralTab()
 				default: EmptyView()
 				}
 			}
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 		}
-		.frame(width: 340, height: 360)
+		.frame(width: 400, height: 360)
 	}
 }
 
@@ -212,5 +215,60 @@ private struct SoundTab: View {
 		testPlayer = try? AVAudioPlayer(contentsOf: url)
 		testPlayer?.volume = Float(prefs.volume)
 		testPlayer?.play()
+	}
+}
+
+// MARK: - General Tab
+
+private struct GeneralTab: View {
+	var body: some View {
+		VStack(alignment: .leading, spacing: 12) {
+			Toggle(
+				"Launch at login",
+				isOn: Binding(
+					get: { LaunchAtLogin.isEnabled },
+					set: { LaunchAtLogin.isEnabled = $0 }
+				)
+			)
+			.disabled(!LaunchAtLogin.isAvailable)
+
+			Spacer()
+		}
+		.padding()
+	}
+}
+
+// MARK: - Launch at Login
+
+enum LaunchAtLogin {
+	static var isAvailable: Bool {
+		if #available(macOS 13.0, *) {
+			return true
+		}
+
+		return false
+	}
+
+	static var isEnabled: Bool {
+		get {
+			guard #available(macOS 13.0, *) else { return false }
+
+			let status = SMAppService.mainApp.status
+
+			return status == .enabled || status == .requiresApproval
+		}
+		set {
+			guard #available(macOS 13.0, *) else { return }
+
+			do {
+				if newValue {
+					try SMAppService.mainApp.register()
+				} else {
+					try SMAppService.mainApp.unregister()
+				}
+			} catch {
+				NSLog("Roameow: could not update Launch at Login — \(error.localizedDescription)")
+			}
+		}
 	}
 }
