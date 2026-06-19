@@ -1,5 +1,6 @@
 import AppKit
 import AVFoundation
+import Combine
 
 class PetView: NSView {
 	private let imageView = NSImageView()
@@ -9,6 +10,9 @@ class PetView: NSView {
 	private var lastTickTime: TimeInterval = 0
 	private var isIdle = false
 	private var isSetUp = false
+	private var lastImageURL: URL?
+	private var lastSoundURL: URL?
+	private var cancellable: AnyCancellable?
 
 	private let prefs = Preferences.shared
 
@@ -31,12 +35,9 @@ class PetView: NSView {
 		loadPetImage()
 		loadAudio()
 
-		NotificationCenter.default.addObserver(
-			self,
-			selector: #selector(prefsChanged),
-			name: UserDefaults.didChangeNotification,
-			object: nil
-		)
+		cancellable = prefs.objectWillChange
+			.receive(on: DispatchQueue.main)
+			.sink { [weak self] in self?.applyPreferences() }
 	}
 
 	override func viewDidMoveToWindow() {
@@ -66,13 +67,18 @@ class PetView: NSView {
 	// MARK: - Image & Audio
 
 	private func loadPetImage() {
-		imageView.image = prefs.resolvedImageURL.flatMap { NSImage(contentsOf: $0) }
-		let size = CGFloat(prefs.petSize)
-		imageView.frame.size = CGSize(width: size, height: size)
+		let url = prefs.resolvedImageURL
+		lastImageURL = url
+		imageView.image = url.flatMap { NSImage(contentsOf: $0) }
 	}
 
 	private func loadAudio() {
-		guard let url = prefs.resolvedSoundURL else { return }
+		let url = prefs.resolvedSoundURL
+		lastSoundURL = url
+		guard let url else {
+			audioPlayer = nil
+			return
+		}
 
 		audioPlayer = try? AVAudioPlayer(contentsOf: url)
 		audioPlayer?.volume = Float(prefs.volume)
@@ -92,6 +98,7 @@ class PetView: NSView {
 	func pause() {
 		movementTimer?.invalidate()
 		movementTimer = nil
+		lastTickTime = 0
 	}
 
 	func resume() {
@@ -175,13 +182,19 @@ class PetView: NSView {
 	}
 
 	func clampToScreenBounds() {
-		var origin = imageView.frame.origin
 		let size = imageView.frame.size
-		origin.x = max(0, min(origin.x, bounds.width - size.width))
-		origin.y = max(0, min(origin.y, bounds.height - size.height))
+		let maxX = max(0, bounds.width - size.width)
+		let maxY = max(0, bounds.height - size.height)
 
-		imageView.frame.origin = origin
-		pickNewTarget()
+		imageView.frame.origin = CGPoint(
+			x: min(max(0, imageView.frame.origin.x), maxX),
+			y: min(max(0, imageView.frame.origin.y), maxY)
+		)
+
+		targetPosition = CGPoint(
+			x: min(max(0, targetPosition.x), maxX),
+			y: min(max(0, targetPosition.y), maxY)
+		)
 	}
 
 	// MARK: - Click
@@ -194,18 +207,29 @@ class PetView: NSView {
 
 	// MARK: - Preferences
 
-	@objc private func prefsChanged() {
-		DispatchQueue.main.async { [weak self] in
-			guard let self else { return }
+	private func applySize(_ size: CGFloat) {
+		imageView.frame.size = CGSize(width: size, height: size)
+		clampToScreenBounds()
+	}
 
-			self.loadPetImage()
-			self.loadAudio()
-			self.clampToScreenBounds()
+	private func applyPreferences() {
+		let size = CGFloat(prefs.petSize)
+		if imageView.frame.size.width != size {
+			applySize(size)
+		}
+
+		if prefs.resolvedImageURL != lastImageURL {
+			loadPetImage()
+		}
+
+		audioPlayer?.volume = Float(prefs.volume)
+
+		if prefs.resolvedSoundURL != lastSoundURL {
+			loadAudio()
 		}
 	}
 
 	deinit {
 		movementTimer?.invalidate()
-		NotificationCenter.default.removeObserver(self)
 	}
 }
