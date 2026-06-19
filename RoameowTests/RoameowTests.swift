@@ -2,19 +2,10 @@ import XCTest
 @testable import Roameow
 
 final class RoameowTests: XCTestCase {
-	private let defaults = UserDefaults.standard
-
-	override func setUp() {
-		super.setUp()
-
-		// Clear all app keys so @AppStorage returns its declared defaults
-		let keys = ["petSize", "movementEnabled", "speed", "idleEnabled", "idleProbability", "volume", "customImagePath", "customSoundPath"]
-
-		keys.forEach { defaults.removeObject(forKey: $0) }
-	}
-
 	func testDefaultPreferences() {
-		let prefs = Preferences.shared
+		let suite = UserDefaults(suiteName: #function)!
+		suite.removePersistentDomain(forName: #function)
+		let prefs = Preferences(defaults: suite)
 
 		XCTAssertEqual(prefs.petSize, 128)
 		XCTAssertTrue(prefs.movementEnabled)
