@@ -24,6 +24,12 @@ class StatusBarController: NSObject {
 	private func setupMenu() {
 		let menu = NSMenu()
 
+		let aboutItem = NSMenuItem(title: "About Roameow", action: #selector(showAbout), keyEquivalent: "")
+		aboutItem.target = self
+		menu.addItem(aboutItem)
+
+		menu.addItem(.separator())
+
 		let settingsItem = NSMenuItem(title: "Settings…", action: #selector(openSettings), keyEquivalent: ",")
 		settingsItem.target = self
 		menu.addItem(settingsItem)
@@ -37,6 +43,11 @@ class StatusBarController: NSObject {
 		menu.addItem(NSMenuItem(title: "Quit Roameow", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
 
 		statusItem.menu = menu
+	}
+
+	@objc private func showAbout() {
+		NSApp.activate(ignoringOtherApps: true)
+		NSApp.orderFrontStandardAboutPanel(nil)
 	}
 
 	@objc private func openSettings() {
