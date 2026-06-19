@@ -1,4 +1,5 @@
 import XCTest
+import AppKit
 @testable import Roameow
 
 final class RoameowTests: XCTestCase {
@@ -15,6 +16,36 @@ final class RoameowTests: XCTestCase {
 		XCTAssertEqual(prefs.volume, 0.13)
 		XCTAssertTrue(prefs.customImagePath.isEmpty)
 		XCTAssertTrue(prefs.customSoundPath.isEmpty)
+	}
+
+	func testPreviewImageCacheReusesDecodedImage() throws {
+		let url = URL(fileURLWithPath: NSTemporaryDirectory())
+			.appendingPathComponent("roameow-preview-\(ProcessInfo.processInfo.globallyUniqueString).png")
+
+		defer { try? FileManager.default.removeItem(at: url) }
+
+		let rep = try XCTUnwrap(
+			NSBitmapImageRep(
+				bitmapDataPlanes: nil,
+				pixelsWide: 4,
+				pixelsHigh: 4,
+				bitsPerSample: 8,
+				samplesPerPixel: 4,
+				hasAlpha: true,
+				isPlanar: false,
+				colorSpaceName: .deviceRGB,
+				bytesPerRow: 0,
+				bitsPerPixel: 0
+			)
+		)
+
+		try XCTUnwrap(rep.representation(using: .png, properties: [:])).write(to: url)
+
+		let first = try XCTUnwrap(PreviewImageCache.image(for: url))
+		let second = PreviewImageCache.image(for: url)
+
+		XCTAssertTrue(first === second, "decoded preview should be cached and reused")
+		XCTAssertNil(PreviewImageCache.image(for: nil))
 	}
 
 	func testPetSizeClamping() {
