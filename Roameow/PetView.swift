@@ -5,9 +5,9 @@ import Combine
 class PetView: NSView {
 	private let imageView = NSImageView()
 	private var audioPlayer: AVAudioPlayer?
-	private var movementTimer: Timer?
+	private let displayLinkDriver = DisplayLinkDriver()
 	private var targetPosition: CGPoint = .zero
-	private var lastTickTime: TimeInterval = 0
+	private var lastFrameTimestamp: TimeInterval = 0
 	private var isIdle = false
 	private var isSetUp = false
 	private var lastImageURL: URL?
@@ -61,7 +61,7 @@ class PetView: NSView {
 		)
 
 		pickNewTarget()
-		startTimer()
+		startDisplayLink()
 	}
 
 	// MARK: - Image & Audio
@@ -87,29 +87,28 @@ class PetView: NSView {
 
 	// MARK: - Movement
 
-	private func startTimer() {
-		movementTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 60.0, repeats: true) { [weak self] _ in
-			self?.tick()
+	private func startDisplayLink() {
+		displayLinkDriver.onFrame = { [weak self] timestamp in
+			self?.tick(timestamp: timestamp)
 		}
 
-		RunLoop.main.add(movementTimer!, forMode: .common)
+		displayLinkDriver.start(for: self)
 	}
 
 	func pause() {
-		movementTimer?.invalidate()
-		movementTimer = nil
-		lastTickTime = 0
+		displayLinkDriver.stop()
+		lastFrameTimestamp = 0
 	}
 
 	func resume() {
 		guard
 			isSetUp,
-			movementTimer == nil
+			!displayLinkDriver.isRunning
 		else {
 			return
 		}
 
-		startTimer()
+		startDisplayLink()
 	}
 
 	private func updateMousePassthrough() {
@@ -121,7 +120,7 @@ class PetView: NSView {
 		window.ignoresMouseEvents = !petScreen.contains(mouseScreen)
 	}
 
-	private func tick() {
+	private func tick(timestamp: TimeInterval) {
 		updateMousePassthrough()
 		guard
 			prefs.movementEnabled,
@@ -130,11 +129,10 @@ class PetView: NSView {
 			return
 		}
 
-		let now = ProcessInfo.processInfo.systemUptime
 		let speed = prefs.speed
-		let frameTime = lastTickTime == 0 ? 1.0 / 60.0 : now - lastTickTime
+		let frameTime = lastFrameTimestamp == 0 ? 1.0 / 60.0 : timestamp - lastFrameTimestamp
 		let normalizedSpeed = speed * (frameTime / (1.0 / 60.0))
-		lastTickTime = now
+		lastFrameTimestamp = timestamp
 
 		var origin = imageView.frame.origin
 		let dx = targetPosition.x - origin.x
@@ -230,6 +228,6 @@ class PetView: NSView {
 	}
 
 	deinit {
-		movementTimer?.invalidate()
+		displayLinkDriver.stop()
 	}
 }

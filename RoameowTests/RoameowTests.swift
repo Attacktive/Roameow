@@ -77,6 +77,15 @@ final class RoameowTests: XCTestCase {
 		XCTAssertEqual(normalized, 1.0, accuracy: 0.001)
 	}
 
+	func testNormalizedSpeedAtArbitraryRefresh() {
+		// A display link feeds real per-frame deltas, not just clean 60/120 Hz, so speed must scale linearly with frame time at any refresh rate.
+		let speed = 2.0
+		let frameTime = 1.0 / 90.0
+		let normalized = speed * (frameTime / (1.0 / 60.0))
+
+		XCTAssertEqual(normalized, 2.0 * 60.0 / 90.0, accuracy: 0.001)
+	}
+
 	// MARK: - FullscreenDetector.coveredDisplays
 
 	private let displayA = DisplayBounds(id: 1, bounds: CGRect(x: 0, y: 0, width: 1920, height: 1080))
