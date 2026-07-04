@@ -64,8 +64,8 @@ final class DisplayLinkDriver: NSObject {
 			CVDisplayLinkSetCurrentCGDisplay(link, displayID)
 		}
 
-		// Retain self for the link's lifetime so the C callback context stays valid; stop() releases it.
-		// Because of this retain, teardown must go through stop() (deinit calls it too, as a backstop).
+		// Retain self for the link's lifetime so the C callback context stays valid; stop() balances the retain.
+		// While the link runs that retain keeps self alive, so deinit cannot fire on its own — teardown must go through stop(), which PetView's deinit and pause() both call.
 		let context = Unmanaged.passRetained(self).toOpaque()
 		CVDisplayLinkSetOutputCallback(link, cvDisplayLinkCallback, context)
 		CVDisplayLinkStart(link)

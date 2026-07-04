@@ -126,6 +126,8 @@ class PetView: NSView {
 			prefs.movementEnabled,
 			!isIdle
 		else {
+			// Drop the stale timestamp so the first frame after idle/disabled movement starts fresh instead of integrating the whole gap in one step.
+			lastFrameTimestamp = 0
 			return
 		}
 
