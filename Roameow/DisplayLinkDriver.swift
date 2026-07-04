@@ -5,7 +5,7 @@ import QuartzCore
 /// Drives a per-frame callback in lockstep with a display's vsync.
 ///
 /// macOS 14+ uses `CADisplayLink`, delivered on the main run loop and bound to the view's own display (so it tracks refresh rate across multi-monitor moves for free).
-/// macOS 12–13 falls back to `CVDisplayLink`, whose callback runs on a dedicated thread and is hopped to the main queue before `onFrame` fires.
+/// macOS 12–13 falls back to `CVDisplayLink`, whose handler runs on a dedicated thread and is hopped to the main queue before `onFrame` fires.
 final class DisplayLinkDriver: NSObject {
 	/// Called once per screen refresh with that frame's timestamp, in seconds.
 	var onFrame: ((TimeInterval) -> Void)?
@@ -40,8 +40,6 @@ final class DisplayLinkDriver: NSObject {
 
 		if let cvDisplayLink {
 			CVDisplayLinkStop(cvDisplayLink)
-			// Balance the +1 retain handed to the C callback context in startCVDisplayLink(for:).
-			Unmanaged.passUnretained(self).release()
 			self.cvDisplayLink = nil
 		}
 	}
@@ -64,41 +62,23 @@ final class DisplayLinkDriver: NSObject {
 			CVDisplayLinkSetCurrentCGDisplay(link, displayID)
 		}
 
-		// Retain self for the link's lifetime so the C callback context stays valid; stop() balances the retain.
-		// While the link runs that retain keeps self alive, so deinit cannot fire on its own — teardown must go through stop(), which PetView's deinit and pause() both call.
-		let context = Unmanaged.passRetained(self).toOpaque()
-		CVDisplayLinkSetOutputCallback(link, cvDisplayLinkCallback, context)
+		// The handler runs on the link's own thread, so it hops to the main queue; capturing self weakly keeps the link from retaining the driver.
+		CVDisplayLinkSetOutputHandler(link) { [weak self] _, _, inOutputTime, _, _ in
+			let output = inOutputTime.pointee
+			let timestamp = Double(output.videoTime) / Double(output.videoTimeScale)
+
+			DispatchQueue.main.async {
+				self?.onFrame?(timestamp)
+			}
+
+			return kCVReturnSuccess
+		}
+
 		CVDisplayLinkStart(link)
 		cvDisplayLink = link
-	}
-
-	fileprivate func deliver(timestamp: TimeInterval) {
-		onFrame?(timestamp)
 	}
 
 	deinit {
 		stop()
 	}
-}
-
-/// C-compatible `CVDisplayLinkOutputCallback` that runs on the display link's own thread, so it converts the timestamp and hops to the main queue before delivering it.
-private func cvDisplayLinkCallback(
-	_ displayLink: CVDisplayLink,
-	_ inNow: UnsafePointer<CVTimeStamp>,
-	_ inOutputTime: UnsafePointer<CVTimeStamp>,
-	_ flagsIn: CVOptionFlags,
-	_ flagsOut: UnsafeMutablePointer<CVOptionFlags>,
-	_ context: UnsafeMutableRawPointer?
-) -> CVReturn {
-	guard let context else { return kCVReturnSuccess }
-
-	let driver = Unmanaged<DisplayLinkDriver>.fromOpaque(context).takeUnretainedValue()
-	let output = inOutputTime.pointee
-	let timestamp = Double(output.videoTime) / Double(output.videoTimeScale)
-
-	DispatchQueue.main.async {
-		driver.deliver(timestamp: timestamp)
-	}
-
-	return kCVReturnSuccess
 }
