@@ -121,6 +121,12 @@ class PetView: NSView {
 	}
 
 	private func tick(timestamp: TimeInterval) {
+		/*
+		The overlay sits below other windows, so macOS periodically marks it occluded and frees its backing store — and nothing else re-renders the pet.
+		Repaint every frame so it reappears the instant it's uncovered, rather than staying blank until a global redraw (e.g. Mission Control).
+		*/
+		imageView.needsDisplay = true
+
 		updateMousePassthrough()
 		guard
 			prefs.movementEnabled,
