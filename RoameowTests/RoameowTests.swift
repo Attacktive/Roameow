@@ -140,4 +140,22 @@ final class RoameowTests: XCTestCase {
 
 		XCTAssertTrue(covered.isEmpty)
 	}
+
+	// MARK: - Pilot light (compositor keep-alive)
+
+	func testPetViewInstallsPilotLightPinnedToTopEdge() {
+		let view = PetView(frame: NSRect(x: 0, y: 0, width: 800, height: 600))
+		let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 800, height: 600), styleMask: .borderless, backing: .buffered, defer: false)
+		window.contentView = view
+
+		let pilot = view.subviews.first { $0.identifier?.rawValue == "pilotLight" }
+
+		XCTAssertNotNil(pilot, "PetView must keep a tiny always-visible view alive so the window server never sees the overlay as fully transparent and drops its surface")
+
+		guard let pilot else { return }
+
+		XCTAssertGreaterThan(pilot.frame.maxY, 590, "pilot light must sit against the top edge, inside the menu-bar strip that normal windows cannot cover")
+		XCTAssertGreaterThan(pilot.alphaValue, 0, "pilot light must actually contribute composited pixels")
+		XCTAssertLessThanOrEqual(pilot.frame.width * pilot.frame.height, 16, "pilot light must stay imperceptibly small")
+	}
 }

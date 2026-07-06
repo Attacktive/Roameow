@@ -60,6 +60,21 @@ class PetView: NSView {
 			height: size
 		)
 
+		/*
+		Pilot light: a tiny, effectively invisible dot pinned inside the menu-bar strip.
+		The macOS 26 compositor silently drops the surface binding of a window whose visible output is entirely transparent — exactly what happens here whenever the pet walks fully behind an app window, since the rest of the overlay is clear.
+		Once dropped, every commit is ignored (the pet stays invisible even back on open desktop) until a window-server-level event such as Mission Control rebinds the surface; no notification fires and no app-side kick rebinds it reliably.
+		Prevention is therefore the only sound fix: keep at least one visible pixel composited at all times. Normal windows cannot cover the menu-bar strip, so the dot's contribution never reaches zero there.
+		Do not remove this as decoration — it IS the fix for the pet staying invisible after de-occlusion.
+		*/
+		let pilotLight = NSView(frame: NSRect(x: 2, y: bounds.height - 4, width: 2, height: 2))
+		pilotLight.identifier = NSUserInterfaceItemIdentifier("pilotLight")
+		pilotLight.wantsLayer = true
+		pilotLight.layer?.backgroundColor = NSColor.white.cgColor
+		pilotLight.alphaValue = 0.05
+		pilotLight.autoresizingMask = [.minYMargin, .maxXMargin]
+		addSubview(pilotLight)
+
 		pickNewTarget()
 		startDisplayLink()
 	}
@@ -121,12 +136,6 @@ class PetView: NSView {
 	}
 
 	private func tick(timestamp: TimeInterval) {
-		/*
-		The overlay sits below other windows, so macOS periodically marks it occluded and frees its backing store — and nothing else re-renders the pet.
-		Repaint every frame so it reappears the instant it's uncovered, rather than staying blank until a global redraw (e.g. Mission Control).
-		*/
-		imageView.needsDisplay = true
-
 		updateMousePassthrough()
 		guard
 			prefs.movementEnabled,
