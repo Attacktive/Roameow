@@ -47,7 +47,21 @@ class StatusBarController: NSObject {
 
 	@objc private func showAbout() {
 		NSApp.activate(ignoringOtherApps: true)
-		NSApp.orderFrontStandardAboutPanel(nil)
+
+		let repositoryURL = URL(string: "https://github.com/Attacktive/Roameow")!
+		let paragraphStyle = NSMutableParagraphStyle()
+		paragraphStyle.alignment = .center
+
+		let credits = NSAttributedString(
+			string: repositoryURL.absoluteString,
+			attributes: [
+				.link: repositoryURL,
+				.font: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize),
+				.paragraphStyle: paragraphStyle
+			]
+		)
+
+		NSApp.orderFrontStandardAboutPanel(options: [.credits: credits])
 	}
 
 	@objc private func openSettings() {
