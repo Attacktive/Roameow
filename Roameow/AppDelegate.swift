@@ -8,6 +8,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	private var statusBarController: StatusBarController?
 	private var settingsWindowController: SettingsWindowController?
 	private var fullscreenDetector: FullscreenDetector?
+	private var screenObscuredDetector: ScreenObscuredDetector?
+	private var coveredDisplays: Set<CGDirectDisplayID> = []
+	private var screenObscured = false
 
 	func applicationDidFinishLaunching(_ notification: Notification) {
 		updaterController = SPUStandardUpdaterController(
@@ -36,13 +39,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		let detector = FullscreenDetector { [weak self] covered in
 			guard let self else { return }
 
-			for (id, controller) in self.overlayWindowControllers {
-				controller.setActive(!covered.contains(id))
-			}
+			self.coveredDisplays = covered
+			self.applyOverlayActiveStates()
 		}
 
 		fullscreenDetector = detector
 		detector.start()
+
+		let obscuredDetector = ScreenObscuredDetector { [weak self] obscured in
+			guard let self else { return }
+
+			self.screenObscured = obscured
+			self.applyOverlayActiveStates()
+		}
+
+		screenObscuredDetector = obscuredDetector
+		obscuredDetector.start()
+	}
+
+	/// Resolves each overlay's active state from both pause sources: a per-display fullscreen cover and the system-wide lock/screen-saver obscuring.
+	private func applyOverlayActiveStates() {
+		for (id, controller) in overlayWindowControllers {
+			controller.setActive(!screenObscured && !coveredDisplays.contains(id))
+		}
 	}
 
 	@objc private func screenParametersDidChange() {
@@ -68,6 +87,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 
 		fullscreenDetector?.evaluate()
+		applyOverlayActiveStates()
 	}
 
 	func showSettings() {

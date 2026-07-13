@@ -158,4 +158,38 @@ final class RoameowTests: XCTestCase {
 		XCTAssertGreaterThan(pilot.alphaValue, 0, "pilot light must actually contribute composited pixels")
 		XCTAssertLessThanOrEqual(pilot.frame.width * pilot.frame.height, 16, "pilot light must stay imperceptibly small")
 	}
+
+	// MARK: - ScreenObscuredDetector
+
+	func testLockObscuresAndUnlockRestores() {
+		var events: [Bool] = []
+		let detector = ScreenObscuredDetector { events.append($0) }
+
+		detector.screenDidLock()
+		detector.screenDidUnlock()
+
+		XCTAssertEqual(events, [true, false], "a lock then unlock should produce exactly one obscure edge and one restore edge")
+	}
+
+	func testScreenSaverAloneObscures() {
+		var events: [Bool] = []
+		let detector = ScreenObscuredDetector { events.append($0) }
+
+		detector.screenSaverDidStart()
+		detector.screenSaverDidStop()
+
+		XCTAssertEqual(events, [true, false], "the screen saver must pause movement even when the screen never locks")
+	}
+
+	func testOverlappingLockAndSaverFireOneEdgeEach() {
+		var events: [Bool] = []
+		let detector = ScreenObscuredDetector { events.append($0) }
+
+		detector.screenSaverDidStart()   // becomes obscured
+		detector.screenDidLock()         // still obscured — no new edge
+		detector.screenSaverDidStop()    // still locked — no new edge
+		detector.screenDidUnlock()       // fully clear — restore
+
+		XCTAssertEqual(events, [true, false], "interleaved lock and saver events must collapse to a single obscure/restore pair")
+	}
 }

@@ -20,6 +20,7 @@
 		9054D82CFFE21CD7DC1FDC04 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B65198FF70E4139B3935587F /* Assets.xcassets */; };
 		93FAC2FD51773B56C1AA033C /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA6C389DEA0A0FB85B39C4A /* Preferences.swift */; };
 		B3C1D2E4F5A6789012345678 /* menubar-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6789012345678 /* menubar-icon.png */; };
+		5C11AA0100000000000000B3 /* ScreenObscuredDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C11AA0100000000000000F3 /* ScreenObscuredDetector.swift */; };
 		DD11AA0100000000000000B2 /* DisplayLinkDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD11AA0100000000000000F2 /* DisplayLinkDriver.swift */; };
 		E0E9D0D6DB1A735036F20531 /* RoameowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE16B9124845CB3AFB39FBB /* RoameowApp.swift */; };
 		E8A8C8F92C5556DCF99B34C6 /* meow.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3A2FDD91FA7D82E18C600C8E /* meow.mp3 */; };
@@ -53,6 +54,7 @@
 		AEA6C389DEA0A0FB85B39C4A /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		B65198FF70E4139B3935587F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C696275FC707AB76A676B24B /* Version.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		5C11AA0100000000000000F3 /* ScreenObscuredDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenObscuredDetector.swift; sourceTree = "<group>"; };
 		DD11AA0100000000000000F2 /* DisplayLinkDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayLinkDriver.swift; sourceTree = "<group>"; };
 		D46230D4CDD0E581AAEBFDE8 /* RoameowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoameowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC2080E911A5EB6729F6C554 /* RoameowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoameowTests.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				5FBB38DB523E0AAE3088CEF7 /* OverlayWindowController.swift */,
 				DD11AA0100000000000000F2 /* DisplayLinkDriver.swift */,
 				FD11AA0100000000000000F1 /* FullscreenDetector.swift */,
+				5C11AA0100000000000000F3 /* ScreenObscuredDetector.swift */,
 				AEA6C389DEA0A0FB85B39C4A /* Preferences.swift */,
 				ABE16B9124845CB3AFB39FBB /* RoameowApp.swift */,
 				1D730A7347936513C324D856 /* SettingsView.swift */,
@@ -241,6 +244,7 @@
 				6BDEDD7063FF4ECC97D2F685 /* OverlayWindowController.swift in Sources */,
 				DD11AA0100000000000000B2 /* DisplayLinkDriver.swift in Sources */,
 				FD11AA0100000000000000B1 /* FullscreenDetector.swift in Sources */,
+				5C11AA0100000000000000B3 /* ScreenObscuredDetector.swift in Sources */,
 				93FAC2FD51773B56C1AA033C /* Preferences.swift in Sources */,
 				E0E9D0D6DB1A735036F20531 /* RoameowApp.swift in Sources */,
 				29986B7949E12981BF1DB9FD /* SettingsView.swift in Sources */,
